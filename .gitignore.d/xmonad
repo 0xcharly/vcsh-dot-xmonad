@@ -1,0 +1,8 @@
+*
+!/.gitignore.d
+!/.gitignore.d/xmonad
+!/.README.d
+!/.README.d/xmonad.md
+!/.config
+!/.config/xmonad
+!/.config/xmonad/xmonad.hs
