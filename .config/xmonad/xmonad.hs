@@ -26,9 +26,9 @@ import qualified XMonad.StackSet as S
 
 delayScratchpads =
   [ NS "calendar" spawnCalendarScratchpad findCalendarScratchpad positionScratchpad -- Google Calendar.
-  , NS "chat" spawnChatScratchpad findChatScratchpad positionChatScratchpad -- Google Chat.
-  , NS "mail" spawnMailScratchpad findMailScratchpad positionMailScratchpad -- Google Mail.
-  , NS "g3c" spawnG3cScratchpad findG3cScratchpad positionG3cScratchpad -- Google Mail.
+  , NS "chat" spawnChatScratchpad findChatScratchpad positionScratchpad -- Google Chat.
+  , NS "mail" spawnMailScratchpad findMailScratchpad positionScratchpad -- Google Mail.
+  , NS "g3c" spawnG3cScratchpad findG3cScratchpad positionScratchpad -- Google Mail.
   , NS "term" spawnTermScratchpad findTermScratchpad positionScratchpad -- Kitty.
   , NS "spotify" spawnSpotifyScratchpad findSpotifyScratchpad positionScratchpad -- Spotify.
   ] where
@@ -36,18 +36,15 @@ delayScratchpads =
     findCalendarScratchpad = resource =? "crx_kjbdgfilnfhdoflbpgamdcdgpehopbep"
     spawnMailScratchpad = "/opt/google/chrome/google-chrome --profile-directory='Profile 1' --app-id=fmgjjmmmlfnkbppncabfkddbjimcfncm"
     findMailScratchpad = resource =? "crx_fmgjjmmmlfnkbppncabfkddbjimcfncm"
-    positionMailScratchpad = customFloating $ S.RationalRect (1/3) (1/9) (1/3) (7/9)
     spawnChatScratchpad = "/opt/google/chrome/google-chrome --profile-directory='Profile 1' --app-id=mdpkiolbdkhdjpekfbkbmhigcaggjagi"
     findChatScratchpad = resource =? "crx_mdpkiolbdkhdjpekfbkbmhigcaggjagi"
-    positionChatScratchpad = customFloating $ S.RationalRect (1/3) (1/9) (1/3) (7/9)
     spawnG3cScratchpad = "/opt/google/chrome/google-chrome --profile-directory='Profile 1' --app-id=lieimlfkkkodccjdbkgeoebabmkpnfek"
     findG3cScratchpad = resource =? "crx_lieimlfkkkodccjdbkgeoebabmkpnfek"
-    positionG3cScratchpad = customFloating $ S.RationalRect (1/3) (1/9) (1/3) (7/9)
     spawnTermScratchpad = "kitty -1 --title kitty-scratchpad"
     findTermScratchpad = title =? "kitty-scratchpad"
     spawnSpotifyScratchpad = "spotify"
     findSpotifyScratchpad = title =? "Spotify"
-    positionScratchpad = customFloating $ S.RationalRect (1/5) (1/7) (3/5) (5/7)
+    positionScratchpad = customFloating $ S.RationalRect (1/3) (1/9) (1/3) (7/9)
 
 delayLayoutHook = tiled ||| Mirror tiled ||| Full ||| threeColumns
   where
