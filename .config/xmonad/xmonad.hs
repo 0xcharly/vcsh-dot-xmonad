@@ -25,27 +25,29 @@ import qualified XMonad.Actions.FlexibleManipulate as Flex
 import qualified XMonad.StackSet as S
 
 delayScratchpads =
-  [ NS "brain" spawnBrainScratchpad findBrainScratchpad positionScratchpad -- Run Obsidian, find it by title.
-  , NS "discord" spawnDiscordScratchpad findDiscordScratchpad positionScratchpad -- Run Discord, find it by title.
-  , NS "pip" spawnPiP findPiP positionPiP -- Only work with existing Picture-in-picture window, find it by title.
-  , NS "term" spawnTermScratchpad findTermScratchpad positionScratchpad -- Run Kitty, find it by title.
-  , NS "tmux" spawnTmuxScratchpad findTmuxScratchpad positionScratchpad -- Run tmux in Kitty, find it by title.
-  , NS "spotify" spawnSpotifyScratchpad findSpotifyScratchpad positionScratchpad -- Run Spotify, find it by title.
+  [ NS "calendar" spawnCalendarScratchpad findCalendarScratchpad positionScratchpad -- Google Calendar.
+  , NS "chat" spawnChatScratchpad findChatScratchpad positionChatScratchpad -- Google Chat.
+  , NS "mail" spawnMailScratchpad findMailScratchpad positionMailScratchpad -- Google Mail.
+  , NS "g3c" spawnG3cScratchpad findG3cScratchpad positionG3cScratchpad -- Google Mail.
+  , NS "term" spawnTermScratchpad findTermScratchpad positionScratchpad -- Kitty.
+  , NS "spotify" spawnSpotifyScratchpad findSpotifyScratchpad positionScratchpad -- Spotify.
   ] where
-    spawnBrainScratchpad = "obsidian --force-device-scale-factor=1"
-    findBrainScratchpad = className =? "obsidian"
-    spawnDiscordScratchpad = "discord"
-    findDiscordScratchpad = className =? "discord"
-    spawnPiP = ""
-    findPiP = title =? "Picture in picture"
-    positionPiP = customFloating $ S.RationalRect (1/5) (1/5) (3/5) (3/5)
-    spawnTermScratchpad = "$HOME/.local/bin/kitty -1 --title kitty-scratchpad"
+    spawnCalendarScratchpad = "/opt/google/chrome/google-chrome --profile-directory='Profile 1' --app-id=kjbdgfilnfhdoflbpgamdcdgpehopbep"
+    findCalendarScratchpad = resource =? "crx_kjbdgfilnfhdoflbpgamdcdgpehopbep"
+    spawnMailScratchpad = "/opt/google/chrome/google-chrome --profile-directory='Profile 1' --app-id=fmgjjmmmlfnkbppncabfkddbjimcfncm"
+    findMailScratchpad = resource =? "crx_fmgjjmmmlfnkbppncabfkddbjimcfncm"
+    positionMailScratchpad = customFloating $ S.RationalRect (1/3) (1/9) (1/3) (7/9)
+    spawnChatScratchpad = "/opt/google/chrome/google-chrome --profile-directory='Profile 1' --app-id=mdpkiolbdkhdjpekfbkbmhigcaggjagi"
+    findChatScratchpad = resource =? "crx_mdpkiolbdkhdjpekfbkbmhigcaggjagi"
+    positionChatScratchpad = customFloating $ S.RationalRect (1/3) (1/9) (1/3) (7/9)
+    spawnG3cScratchpad = "/opt/google/chrome/google-chrome --profile-directory='Profile 1' --app-id=lieimlfkkkodccjdbkgeoebabmkpnfek"
+    findG3cScratchpad = resource =? "crx_lieimlfkkkodccjdbkgeoebabmkpnfek"
+    positionG3cScratchpad = customFloating $ S.RationalRect (1/3) (1/9) (1/3) (7/9)
+    spawnTermScratchpad = "kitty -1 --title kitty-scratchpad"
     findTermScratchpad = title =? "kitty-scratchpad"
-    spawnTmuxScratchpad = "$HOME/.local/bin/kitty -1 --title tmux-scratchpad -e tmux new-session -A -s scratchpad"
-    findTmuxScratchpad = title =? "tmux-scratchpad"
     spawnSpotifyScratchpad = "spotify"
     findSpotifyScratchpad = title =? "Spotify"
-    positionScratchpad = customFloating $ S.RationalRect (1/5) (1/5) (3/5) (3/5)
+    positionScratchpad = customFloating $ S.RationalRect (1/5) (1/7) (3/5) (5/7)
 
 delayLayoutHook = tiled ||| Mirror tiled ||| Full ||| threeColumns
   where
@@ -77,7 +79,7 @@ toggleFloat w =
 -- Returns a query which checks if the window has the given property.
 hasProperty :: String -> Query Bool
 hasProperty name = ask >>= \w -> liftX $ withDisplay $ queryFunc w
-  where queryFunc window display = do 
+  where queryFunc window display = do
           atom <- getAtom name
 
           prop8 <- io $ getWindowProperty8 display atom window
@@ -101,7 +103,7 @@ hasProperty name = ask >>= \w -> liftX $ withDisplay $ queryFunc w
 -- Whether a window is a splash screen.
 -- The second criteria is used to match Jetbrains' IDE splash popup.
 isSplash :: Query Bool
-isSplash = 
+isSplash =
   (isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_SPLASH") <||>
   ((hasProperty "_MOTIF_WM_HINTS") <&&> (className =? "jetbrains-studio") <&&> (title =? "win0"))
 
@@ -133,26 +135,33 @@ aswbManageHooks = composeAll
 
 delayKeys =
   [ ("M-S-l", spawn "slock")
-  , ("M-0", windows $ S.greedyView "private:delay")
-  , ("M-S-0", windows $ S.shift "private:delay")
+  -- , ("M-0", windows $ S.greedyView "private:delay")
+  -- , ("M-S-0", windows $ S.shift "private:delay")
   , ("M-<Left>",  prevWS')
   , ("M-<Right>",  nextWS')
   , ("M-S-<Left>", shiftToPrev >> prevWS')
   , ("M-S-<Right>", shiftToNext >> nextWS')
   , ("M-f", withFocused $ toggleFloat)
   , ("M-p", spawn "$HOME/.local/bin/rofi -no-config -no-lazy-grab -show drun -modi drun -theme ~/.config/rofi/launcher.rasi")
-  , ("M-c", spawn "ROFI_PLUGIN_PATH=$HOME/.local/usr/lib/rofi $HOME/.local/bin/rofi -show calc -modi calc -no-show-match -no-sort -theme ~/.config/rofi/launcher.rasi")
-  , ("M-b", namedScratchpadAction delayScratchpads "brain")
-  , ("M-d", namedScratchpadAction delayScratchpads "discord")
-  , ("M-m", namedScratchpadAction delayScratchpads "pip")
-  , ("M-t", namedScratchpadAction delayScratchpads "term")
-  , ("M-s", namedScratchpadAction delayScratchpads "spotify")
+  , ("M-S-p", spawn "ROFI_PLUGIN_PATH=$HOME/.local/usr/lib/rofi $HOME/.local/bin/rofi -show calc -modi calc -no-show-match -no-sort -theme ~/.config/rofi/launcher.rasi")
+  , ("M-1", namedScratchpadAction delayScratchpads "g3c")
+  , ("M-2", namedScratchpadAction delayScratchpads "mail")
+  , ("M-3", namedScratchpadAction delayScratchpads "term")
+  , ("M-4", namedScratchpadAction delayScratchpads "calendar")
+  , ("M-5", namedScratchpadAction delayScratchpads "chat")
+  -- , ("M-0", namedScratchpadAction delayScratchpads "spotify")
   ] ++
-  [ (otherModMasks ++ "M-" ++ [key], action tag)
-  | (tag, key) <- zip delayWorkspaces "123456789"
-  , (otherModMasks, action) <- [("", windows . S.view), ("S-", windows . S.shift)]
+  [ ("M-" ++ [key], windows $ S.greedyView tag) | (tag, key) <- zip delayWorkspaces "67890"
   ]
 
+-- keys :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
+-- keys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
+--   [ ((modMask, key), windows $ S.greedyView tag) | (tag, key) <- zip (XMonad.workspaces conf) [xK_6 .. xK_9]
+--   -- quit, or restart
+--   , ((modMask .|. shiftMask, xK_q     ), io (exitWith ExitSuccess)) -- %! Quit xmonad
+--   , ((modMask              , xK_q     ), spawn "if type xmonad; then xmonad --recompile && xmonad --restart; else xmessage xmonad not in \\$PATH: \"$PATH\"; fi") -- %! Restart xmonad
+--   ]
+--
 main :: IO()
 main = xmonad
   $ withUrgencyHook NoUrgencyHook
@@ -160,12 +169,13 @@ main = xmonad
   $ withSB delayPolybarConfig
   $ docks
   $ def
-    { modMask = mod4Mask  -- Rebind Mod to the Super key.
-    , terminal = "$HOME/.local/bin/kitty -1"
-    , borderWidth = 1
+    { modMask = mod1Mask  -- Rebind Mod to the Super key.
+    , terminal = "kitty -1"
+    , borderWidth = 2
     , normalBorderColor  = "#22212c" -- Dark gray.
     , focusedBorderColor = "#9580ff" -- Purple.
     , workspaces = delayWorkspaces
+    -- , XMonad.keys = Main.keys
     , handleEventHook = handleEventHook def
     , layoutHook = desktopLayoutModifiers $ delayLayoutHook
     , logHook = dynamicLogWithPP . filterOutWsPP [scratchpadWorkspaceTag] $ def
