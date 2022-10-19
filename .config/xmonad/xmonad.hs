@@ -10,8 +10,8 @@ import XMonad.Hooks.StatusBar.PP
 import XMonad.Hooks.UrgencyHook
 import XMonad.Layout.IndependentScreens
 import XMonad.Layout.Renamed
-import XMonad.Layout.Spacing
 import XMonad.Layout.ThreeColumns
+import XMonad.Layout.NoBorders
 import XMonad.ManageHook
 import XMonad.Hooks.ManageHelpers
 import XMonad.Util.EZConfig (additionalKeysP, additionalMouseBindings)
@@ -46,14 +46,12 @@ delayScratchpads =
     findSpotifyScratchpad = title =? "Spotify"
     positionScratchpad = customFloating $ S.RationalRect (1/3) (1/9) (1/3) (7/9)
 
-delayLayoutHook = tiled ||| Mirror tiled ||| Full ||| threeColumns
+delayLayoutHook = threeColumns ||| noBorders Full
   where
-    threeColumns = spacing gap $ ThreeColMid nmaster delta ratio
-    tiled = spacing gap $ Tall nmaster delta ratio
+    threeColumns = ThreeColMid nmaster delta ratio
     nmaster = 1
     ratio = 1/2
     delta = 3/100
-    gap = 8
 
 delayWorkspaces =
   [ "1:mail"
@@ -169,8 +167,8 @@ main = xmonad
     { modMask = mod1Mask  -- Rebind Mod to the Super key.
     , terminal = "kitty -1"
     , borderWidth = 2
-    , normalBorderColor  = "#22212c" -- Dark gray.
-    , focusedBorderColor = "#9580ff" -- Purple.
+    , normalBorderColor  = "#282c34" -- Dark gray.
+    , focusedBorderColor = "#61afef" -- Blue.
     , workspaces = delayWorkspaces
     -- , XMonad.keys = Main.keys
     , handleEventHook = handleEventHook def
