@@ -25,25 +25,22 @@ import qualified XMonad.Actions.FlexibleManipulate as Flex
 import qualified XMonad.StackSet as S
 
 delayScratchpads =
-  [ NS "calendar" spawnCalendarScratchpad findCalendarScratchpad positionScratchpad -- Google Calendar.
-  , NS "chat" spawnChatScratchpad findChatScratchpad positionScratchpad -- Google Chat.
+  [ NS "obsidian" spawnObsidianScratchpad findObsidianScratchpad positionScratchpad -- Obsidian.
   , NS "mail" spawnMailScratchpad findMailScratchpad positionScratchpad -- Google Mail.
-  , NS "g3c" spawnG3cScratchpad findG3cScratchpad positionScratchpad -- Google Mail.
   , NS "term" spawnTermScratchpad findTermScratchpad positionScratchpad -- Kitty.
-  , NS "spotify" spawnSpotifyScratchpad findSpotifyScratchpad positionScratchpad -- Spotify.
+  , NS "calendar" spawnCalendarScratchpad findCalendarScratchpad positionScratchpad -- Google Calendar.
+  , NS "chat" spawnChatScratchpad findChatScratchpad positionScratchpad -- Google Chat.
   ] where
-    spawnCalendarScratchpad = "/opt/google/chrome/google-chrome --profile-directory='Profile 1' --app-id=kjbdgfilnfhdoflbpgamdcdgpehopbep"
-    findCalendarScratchpad = resource =? "crx_kjbdgfilnfhdoflbpgamdcdgpehopbep"
+    spawnObsidianScratchpad = "obsidian --force-device-scale-factor=1"
+    findObsidianScratchpad = className =? "obsidian"
     spawnMailScratchpad = "/opt/google/chrome/google-chrome --profile-directory='Profile 1' --app-id=fmgjjmmmlfnkbppncabfkddbjimcfncm"
     findMailScratchpad = resource =? "crx_fmgjjmmmlfnkbppncabfkddbjimcfncm"
-    spawnChatScratchpad = "/opt/google/chrome/google-chrome --profile-directory='Profile 1' --app-id=mdpkiolbdkhdjpekfbkbmhigcaggjagi"
-    findChatScratchpad = resource =? "crx_mdpkiolbdkhdjpekfbkbmhigcaggjagi"
-    spawnG3cScratchpad = "/opt/google/chrome/google-chrome --profile-directory='Profile 1' --app-id=lieimlfkkkodccjdbkgeoebabmkpnfek"
-    findG3cScratchpad = resource =? "crx_lieimlfkkkodccjdbkgeoebabmkpnfek"
     spawnTermScratchpad = "kitty -1 --title kitty-scratchpad"
     findTermScratchpad = title =? "kitty-scratchpad"
-    spawnSpotifyScratchpad = "spotify"
-    findSpotifyScratchpad = title =? "Spotify"
+    spawnCalendarScratchpad = "/opt/google/chrome/google-chrome --profile-directory='Profile 1' --app-id=kjbdgfilnfhdoflbpgamdcdgpehopbep"
+    findCalendarScratchpad = resource =? "crx_kjbdgfilnfhdoflbpgamdcdgpehopbep"
+    spawnChatScratchpad = "/opt/google/chrome/google-chrome --profile-directory='Profile 1' --app-id=mdpkiolbdkhdjpekfbkbmhigcaggjagi"
+    findChatScratchpad = resource =? "crx_mdpkiolbdkhdjpekfbkbmhigcaggjagi"
     positionScratchpad = customFloating $ S.RationalRect (1/3) (1/9) (1/3) (7/9)
 
 delayLayoutHook = threeColumns ||| noBorders Full
@@ -139,14 +136,13 @@ delayKeys =
   , ("M-f", withFocused $ toggleFloat)
   , ("M-p", spawn "$HOME/.local/bin/rofi -no-config -no-lazy-grab -show drun -modi drun -theme ~/.config/rofi/launcher.rasi")
   , ("M-S-p", spawn "ROFI_PLUGIN_PATH=$HOME/.local/usr/lib/rofi $HOME/.local/bin/rofi -show calc -modi calc -no-show-match -no-sort -theme ~/.config/rofi/launcher.rasi")
-  , ("M-1", namedScratchpadAction delayScratchpads "g3c")
+  , ("M-1", namedScratchpadAction delayScratchpads "obsidian")
   , ("M-2", namedScratchpadAction delayScratchpads "mail")
   , ("M-3", namedScratchpadAction delayScratchpads "term")
   , ("M-4", namedScratchpadAction delayScratchpads "calendar")
   , ("M-5", namedScratchpadAction delayScratchpads "chat")
-  -- , ("M-0", namedScratchpadAction delayScratchpads "spotify")
   ] ++
-  [ ("M-" ++ [key], windows $ S.greedyView tag) | (tag, key) <- zip delayWorkspaces "67890"
+  [ ("M-M4-" ++ [key], windows $ S.greedyView tag) | (tag, key) <- zip delayWorkspaces "12345"
   ]
 
 -- keys :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
@@ -179,6 +175,6 @@ main = xmonad
     }
     `additionalKeysP` delayKeys
     `additionalMouseBindings`
-    [ ((mod4Mask, button1), (\w -> focus w >> mouseMoveWindow w))
-    , ((mod4Mask, button2), (\w -> focus w >> mouseResizeWindow w))
+    [ ((mod1Mask .|. shiftMask, button1), (\w -> focus w >> mouseMoveWindow w))
+    , ((mod1Mask .|. shiftMask, button2), (\w -> focus w >> mouseResizeWindow w))
     ]
