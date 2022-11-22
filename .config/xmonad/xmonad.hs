@@ -25,14 +25,14 @@ import qualified XMonad.Actions.FlexibleManipulate as Flex
 import qualified XMonad.StackSet as S
 
 delayScratchpads =
-  [ NS "obsidian" spawnObsidianScratchpad findObsidianScratchpad positionScratchpad -- Obsidian.
+  [ NS "brave" spawnBraveBrowserScratchpad findBraveBrowserScratchpad bravePositionScratchpad -- Brave.
   , NS "mail" spawnMailScratchpad findMailScratchpad positionScratchpad -- Google Mail.
   , NS "term" spawnTermScratchpad findTermScratchpad positionScratchpad -- Kitty.
   , NS "calendar" spawnCalendarScratchpad findCalendarScratchpad positionScratchpad -- Google Calendar.
   , NS "chat" spawnChatScratchpad findChatScratchpad positionScratchpad -- Google Chat.
   ] where
-    spawnObsidianScratchpad = "obsidian --force-device-scale-factor=1"
-    findObsidianScratchpad = className =? "obsidian"
+    spawnBraveBrowserScratchpad = "~/.local/bin/Brave.AppImage --force-device-scale-factor=1"
+    findBraveBrowserScratchpad = className =? "Brave-browser"
     spawnMailScratchpad = "/opt/google/chrome/google-chrome --profile-directory='Profile 1' --app-id=fmgjjmmmlfnkbppncabfkddbjimcfncm"
     findMailScratchpad = resource =? "crx_fmgjjmmmlfnkbppncabfkddbjimcfncm"
     spawnTermScratchpad = "kitty -1 --title kitty-scratchpad"
@@ -42,6 +42,7 @@ delayScratchpads =
     spawnChatScratchpad = "/opt/google/chrome/google-chrome --profile-directory='Profile 1' --app-id=mdpkiolbdkhdjpekfbkbmhigcaggjagi"
     findChatScratchpad = resource =? "crx_mdpkiolbdkhdjpekfbkbmhigcaggjagi"
     positionScratchpad = customFloating $ S.RationalRect (1/3) (1/9) (1/3) (7/9)
+    bravePositionScratchpad = customFloating $ S.RationalRect (1/5) (1/9) (3/5) (7/9)
 
 delayLayoutHook = threeColumns ||| noBorders Full
   where
@@ -136,7 +137,7 @@ delayKeys =
   , ("M-f", withFocused $ toggleFloat)
   , ("M-p", spawn "$HOME/.local/bin/rofi -no-config -no-lazy-grab -show drun -modi drun -theme ~/.config/rofi/launcher.rasi")
   , ("M-S-p", spawn "ROFI_PLUGIN_PATH=$HOME/.local/usr/lib/rofi $HOME/.local/bin/rofi -show calc -modi calc -no-show-match -no-sort -theme ~/.config/rofi/launcher.rasi")
-  , ("M-1", namedScratchpadAction delayScratchpads "obsidian")
+  , ("M-1", namedScratchpadAction delayScratchpads "brave")
   , ("M-2", namedScratchpadAction delayScratchpads "mail")
   , ("M-3", namedScratchpadAction delayScratchpads "term")
   , ("M-4", namedScratchpadAction delayScratchpads "calendar")
