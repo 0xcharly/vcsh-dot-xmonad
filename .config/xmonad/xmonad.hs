@@ -8,8 +8,10 @@ import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.StatusBar
 import XMonad.Hooks.StatusBar.PP
 import XMonad.Hooks.UrgencyHook
+import XMonad.Layout.Fullscreen
 import XMonad.Layout.IndependentScreens
 import XMonad.Layout.Renamed
+import XMonad.Layout.Spacing
 import XMonad.Layout.ThreeColumns
 import XMonad.Layout.NoBorders
 import XMonad.ManageHook
@@ -42,14 +44,15 @@ delayScratchpads =
     spawnChatScratchpad = "/opt/google/chrome/google-chrome --profile-directory='Profile 1' --app-id=mdpkiolbdkhdjpekfbkbmhigcaggjagi"
     findChatScratchpad = resource =? "crx_mdpkiolbdkhdjpekfbkbmhigcaggjagi"
     positionScratchpad = customFloating $ S.RationalRect (1/3) (1/9) (1/3) (7/9)
-    bravePositionScratchpad = customFloating $ S.RationalRect (1/5) (1/9) (3/5) (7/9)
+    bravePositionScratchpad = customFloating $ S.RationalRect (1/4) (1/9) (2/4) (7/9)
 
 delayLayoutHook = threeColumns ||| noBorders Full
   where
-    threeColumns = ThreeColMid nmaster delta ratio
+    threeColumns = smartSpacingWithEdge gap $ fullscreenFull $ ThreeColMid nmaster delta ratio
     nmaster = 1
-    ratio = 1/2
     delta = 3/100
+    ratio = 1/2
+    gap = 8
 
 delayWorkspaces =
   [ "1:mail"
@@ -164,8 +167,8 @@ main = xmonad
     { modMask = mod1Mask  -- Rebind Mod to the Super key.
     , terminal = "kitty -1"
     , borderWidth = 2
-    , normalBorderColor  = "#282c34" -- Dark gray.
-    , focusedBorderColor = "#61afef" -- Blue.
+    , normalBorderColor  = "#21252b"
+    , focusedBorderColor = "#c678dd"
     , workspaces = delayWorkspaces
     -- , XMonad.keys = Main.keys
     , handleEventHook = handleEventHook def
