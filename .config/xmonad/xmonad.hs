@@ -126,6 +126,7 @@ delayManageHook = aswbManageHooks
 aswbManageHooks = composeAll
   [ className =? "Firefox" --> doShift "private:delay"
   , className =? "jetbrains-studio" --> doShift "3:code"
+  , title =? "Picture in picture" --> doRectFloat (S.RationalRect (5/7) (7/9) (1/7) (1/5))
   , isSplash --> doIgnore
   ]
 
