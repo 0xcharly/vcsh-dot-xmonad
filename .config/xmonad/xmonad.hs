@@ -37,8 +37,8 @@ delayScratchpads =
     findBraveBrowserScratchpad = className =? "Brave-browser"
     spawnMailScratchpad = "/opt/google/chrome/google-chrome --profile-directory='Profile 1' --app-id=fmgjjmmmlfnkbppncabfkddbjimcfncm"
     findMailScratchpad = resource =? "crx_fmgjjmmmlfnkbppncabfkddbjimcfncm"
-    spawnTermScratchpad = "~/.local/bin/kitty --title kitty-scratchpad"
-    findTermScratchpad = title =? "kitty-scratchpad"
+    spawnTermScratchpad = "~/.local/bin/kitty --class kitty-scratchpad"
+    findTermScratchpad = className =? "kitty-scratchpad"
     spawnCalendarScratchpad = "/opt/google/chrome/google-chrome --profile-directory='Profile 1' --app-id=kjbdgfilnfhdoflbpgamdcdgpehopbep"
     findCalendarScratchpad = resource =? "crx_kjbdgfilnfhdoflbpgamdcdgpehopbep"
     spawnChatScratchpad = "/opt/google/chrome/google-chrome --profile-directory='Profile 1' --app-id=mdpkiolbdkhdjpekfbkbmhigcaggjagi"
@@ -166,7 +166,7 @@ main = xmonad
   $ def
     { modMask = mod1Mask  -- Rebind Mod to the Super key.
     , terminal = "~/.local/bin/kitty"
-    , borderWidth = 2
+    , borderWidth = 4
     , normalBorderColor  = "#21252b"
     , focusedBorderColor = "#c678dd"
     , workspaces = delayWorkspaces
