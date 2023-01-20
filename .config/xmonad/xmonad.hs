@@ -37,7 +37,7 @@ delayScratchpads =
     findBraveBrowserScratchpad = className =? "Brave-browser"
     spawnMailScratchpad = "/opt/google/chrome/google-chrome --profile-directory='Profile 1' --app-id=fmgjjmmmlfnkbppncabfkddbjimcfncm"
     findMailScratchpad = resource =? "crx_fmgjjmmmlfnkbppncabfkddbjimcfncm"
-    spawnTermScratchpad = "~/.local/bin/kitty --class kitty-scratchpad"
+    spawnTermScratchpad = "~/.local/kitty.app/bin/kitty --class kitty-scratchpad"
     findTermScratchpad = className =? "kitty-scratchpad"
     spawnCalendarScratchpad = "/opt/google/chrome/google-chrome --profile-directory='Profile 1' --app-id=kjbdgfilnfhdoflbpgamdcdgpehopbep"
     findCalendarScratchpad = resource =? "crx_kjbdgfilnfhdoflbpgamdcdgpehopbep"
@@ -124,9 +124,7 @@ delayPolybarConfig = def
 
 delayManageHook = aswbManageHooks
 aswbManageHooks = composeAll
-  [ className =? "Firefox" --> doShift "private:delay"
-  , className =? "jetbrains-studio" --> doShift "3:code"
-  , title =? "Picture in picture" --> doRectFloat (S.RationalRect (5/7) (7/9) (1/7) (1/5))
+  [ title =? "Picture in picture" --> doFloat -- doRectFloat (S.RationalRect (1/179) (7/9) (1/7) (1/5))
   , isSplash --> doIgnore
   ]
 
@@ -166,7 +164,7 @@ main = xmonad
   $ docks
   $ def
     { modMask = mod1Mask  -- Rebind Mod to the Super key.
-    , terminal = "~/.local/bin/kitty"
+    , terminal = "~/.local/kitty.app/bin/kitty"
     , borderWidth = 4
     , normalBorderColor  = "#21252b"
     , focusedBorderColor = "#c678dd"
@@ -175,7 +173,7 @@ main = xmonad
     , handleEventHook = handleEventHook def
     , layoutHook = desktopLayoutModifiers $ delayLayoutHook
     , logHook = dynamicLogWithPP . filterOutWsPP [scratchpadWorkspaceTag] $ def
-    , manageHook = manageDocks <+> namedScratchpadManageHook delayScratchpads <+> delayManageHook <+> manageHook def
+    , manageHook = manageDocks <> namedScratchpadManageHook delayScratchpads <> delayManageHook <> manageHook def
     , startupHook = startupHook def
     }
     `additionalKeysP` delayKeys
