@@ -16,7 +16,7 @@ import XMonad.Layout.ThreeColumns
 import XMonad.Layout.NoBorders
 import XMonad.ManageHook
 import XMonad.Hooks.ManageHelpers
-import XMonad.Util.EZConfig (additionalKeysP, additionalMouseBindings)
+import XMonad.Util.EZConfig (additionalKeysP, additionalMouseBindings, removeKeysP)
 import XMonad.Util.NamedScratchpad
 import XMonad.Util.Run (spawnPipe)
 import XMonad.Util.Ungrab
@@ -136,12 +136,14 @@ delayKeys =
   , ("M-<Right>",  nextWS')
   , ("M-S-<Left>", shiftToPrev >> prevWS')
   , ("M-S-<Right>", shiftToNext >> nextWS')
+  , ("M-S-<Enter>", windows $ S.swapMaster . S.focusDown)
+  , ("M-s", spawn "~/.local/kitty.app/bin/kitty")
+  , ("M-c", namedScratchpadAction delayScratchpads "term")
   , ("M-f", withFocused $ toggleFloat)
-  , ("M-p", spawn "$HOME/.local/bin/rofi -no-config -no-lazy-grab -show drun -modi drun -theme ~/.config/rofi/launcher.rasi")
+  , ("M-p", spawn "$HOME/.local/bin/rofi -no-config -no-lazy-grab -show drun -modi drun,run -theme ~/.config/rofi/launcher.rasi")
   , ("M-S-p", spawn "ROFI_PLUGIN_PATH=$HOME/.local/usr/lib/rofi $HOME/.local/bin/rofi -show calc -modi calc -no-show-match -no-sort -theme ~/.config/rofi/launcher.rasi")
   , ("M-1", namedScratchpadAction delayScratchpads "brave")
   , ("M-2", namedScratchpadAction delayScratchpads "mail")
-  , ("M-3", namedScratchpadAction delayScratchpads "term")
   , ("M-4", namedScratchpadAction delayScratchpads "calendar")
   , ("M-5", namedScratchpadAction delayScratchpads "chat")
   ] ++
@@ -176,6 +178,7 @@ main = xmonad
     , manageHook = manageDocks <> namedScratchpadManageHook delayScratchpads <> delayManageHook <> manageHook def
     , startupHook = startupHook def
     }
+    `removeKeysP` [ "M-<Enter>", "M-S-<Enter>" ]
     `additionalKeysP` delayKeys
     `additionalMouseBindings`
     [ ((mod1Mask .|. shiftMask, button1), (\w -> focus w >> mouseMoveWindow w))
